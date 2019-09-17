@@ -16,13 +16,20 @@ public class textareaMonitor implements DocumentListener
 	 */
 	
 	@Override
+	/* Only works when other attributes are changed (font, size, but not text)
+	 * verbatim from SO
+	 * 
+	 * (non-Javadoc)
+	 * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
+	 */
 	public void changedUpdate(DocumentEvent docEvent) 
 	{
-		Document source = docEvent.getDocument();
-		parseAndChangeFont(docEvent);
-
+		System.out.println("An attribute(s) from your document has been changed!");
 	}
 
+	// Need to worry about the bottom two events - if the user
+	// tries to update something then we need to catch things.
+	
 	@Override
 	public void insertUpdate(DocumentEvent docEvent)
 	{
@@ -33,25 +40,34 @@ public class textareaMonitor implements DocumentListener
 	@Override
 	public void removeUpdate(DocumentEvent docEvent) 
 	{
-		System.out.println(docEvent);
+		Document source = docEvent.getDocument();
+		parseAndChangeFont(docEvent);
 	}
 	
 	// Parses the new input/edit to see if it one of the target string(s)/char(s)
-	// returns single char -> gives us font color to append to the JTextArea.
 	
 	public void parseAndChangeFont (DocumentEvent docEvent)
 	{
 		Document source = docEvent.getDocument();
+		
 		try
-		{String sourceText = source.getText(0, source.getLength());}
+		{
+			String sourceText = source.getText(0, source.getLength());
+			documentParser parser = new documentParser();
+			parser.parseAndDetermine(sourceText);
+		}
+		
 		catch (BadLocationException badLocation)
 		{
 			System.out.println("Contents : unknown");
 			System.exit(1);
 		}
 		
-		documentParser parser = new documentParser();
-		
+		catch (Exception e)
+		{
+			System.out.println("Unknown error caught!");
+			System.exit(1);
+		}
 		
 	}
 }

@@ -16,6 +16,7 @@ import javax.swing.event.TreeSelectionListener;
 class editor2 extends JFrame implements ActionListener{
     
     JTextArea text;
+    Document doc;
     JFrame frame;
     JScrollPane scroll_bar;
     JButton b1, b2, b3;
@@ -35,6 +36,8 @@ class editor2 extends JFrame implements ActionListener{
         javax.swing.plaf.FontUIResource(f));
 
         text = new JTextArea();
+        doc = text.getDocument();
+        doc.addDocumentListener(new textareaMonitor());
         scroll_bar = new JScrollPane();
 
         JMenuBar menubar = new JMenuBar();
